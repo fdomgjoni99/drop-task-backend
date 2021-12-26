@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BoardController;
 use App\Http\Controllers\CardController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -28,7 +29,7 @@ Route::group([
     'middleware' => 'auth:sanctum'
 ], function(){
     Route::resource('cards', CardController::class);
-    
+    Route::resource('boards', BoardController::class);
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
