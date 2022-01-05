@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCardRequest;
 use App\Models\Card;
+use App\Models\Listing;
 use Illuminate\Http\Request;
 
 class CardController extends Controller
@@ -13,19 +14,10 @@ class CardController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($listingId)
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $cards = Card::where('listing_id', $listingId)->get();
+        return $cards;
     }
 
     /**
@@ -34,12 +26,16 @@ class CardController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreCardRequest $request)
+    public function store(StoreCardRequest $request, $listingId)
     {
         $data = $request->validated();
-        $data['user_id'] = auth()->user()->id;
-        $data['content'] = json_encode($data['content']);
-        $card = Card::create($data);
+        $progress = collect($data['checklist'])->countBy('completed');
+        $data['checklist']['progress'] = $progress[1] . '/' . $progress[0];
+        $data['checklist'] = json_encode($data['checklist']);
+        $listing = Listing::findOrFail($listingId);
+        $data['index'] = $listing->cards()->max('index') === null ? 0 : $listing->cards()->max('index') + 1;
+        $card = new Card($data);
+        $listing->cards()->save($card);
         return $card;
     }
 
@@ -51,21 +47,8 @@ class CardController extends Controller
      */
     public function show($id)
     {
-        $card = Card::find($id);
-        if(!$card)
-            return response()->json([], 404);
+        $card = Card::findOrFail($id);
         return $card;
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**
@@ -86,8 +69,35 @@ class CardController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($listingId, $id)
     {
-        //
+        $card = Card::findOrFail($id);
+        $card->delete();
+        return $card;
+    }
+
+    public function trashedCards(){
+        $cards = Card::onlyTrashed()->get();
+        return $cards;
+    }
+
+    public function destroyPermanently($listingId, $id){
+        $card = Card::onlyTrashed()->find($id);
+        if(!$card)
+            return response()->json([], 404);
+        $card->forceDelete();
+        return $card;
+    }
+
+    public function add(){
+        
+    }
+
+    public function remove(){
+        
+    }
+
+    public function move(){
+        
     }
 }

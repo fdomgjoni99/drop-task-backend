@@ -13,4 +13,8 @@ class Board extends Model
     public function setTitleAttribute($value){
         $this->attributes['title'] = ucfirst($value);
     }
+
+    public function listings(){
+        return $this->hasMany(Listing::class);
+    }
 }

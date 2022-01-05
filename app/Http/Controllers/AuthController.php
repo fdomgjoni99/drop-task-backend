@@ -27,13 +27,15 @@ class AuthController extends Controller
     }
 
     public function login(Request $request){
-        $validated = $request->validate([
+        $credentials = $request->validate([
             'email' => 'required|string|email',
             'password' => 'required|string|min:5'
         ]);
-        if(!Auth::attempt($validated)){
+        if(!Auth::attempt($credentials)){
             return response()->json(['error' => 'invalid credentials'], 401);
         }
-        return ['token' => auth()->user()->createToken('tokens')->plainTextToken];
+        $userData = auth()->user();
+        $userData['token'] = auth()->user()->createToken('tokens')->plainTextToken;
+        return $userData;
     }
 }

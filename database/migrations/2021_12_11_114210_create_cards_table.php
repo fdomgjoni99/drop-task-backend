@@ -17,9 +17,11 @@ class CreateCardsTable extends Migration
             $table->id();
             $table->string('title', 200);
             $table->text('description', 2000);
-            $table->json('content');
+            $table->json('checklist');
+            $table->integer('index');
             $table->foreignId('listing_id');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

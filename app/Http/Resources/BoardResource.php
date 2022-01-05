@@ -16,7 +16,7 @@ class BoardResource extends JsonResource
     public function toArray($request)
     {
         return [
-            // 'id' => (new Hashids('Batman', 8))->encode($this->id),
+            // 'id' => (new Hashids(env('HASHIDS_SALT'), 8))->encode($this->id),
             'id' => $this->id,
             'title' => $this->title,
             'updated_at' => $this->updated_at->diffForHumans()

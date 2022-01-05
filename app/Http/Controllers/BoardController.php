@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\BoardResource;
 use App\Models\Board;
+use App\Models\Listing;
 use Illuminate\Http\Request;
 
 class BoardController extends Controller
@@ -19,6 +20,7 @@ class BoardController extends Controller
         ]);
         $data = array_merge($data, ['user_id' => auth()->user()->id]);
         $board = Board::create($data);
+        $listings = Listing::storeListings($board->id);
         return $board;
     }
 
