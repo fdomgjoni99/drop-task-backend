@@ -17,11 +17,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/auth/redirect', function () {
+Route::get('/auth/github/redirect', function () {
     return Socialite::driver('github')->redirect();
 });
 
-Route::get('/auth/callback', function () {
+Route::get('/auth/github/callback', function () {
     $user = Socialite::driver('github')->user();
     return redirect(env('CLIENT_URL') . '?token=blalalaalal');
 });
