@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Models\User;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,10 +18,26 @@ Route::get('/', function () {
 });
 
 Route::get('/auth/github/redirect', function () {
-    return Socialite::driver('github')->redirect();
+    return Socialite::driver('github')->redirect(); 
 });
 
 Route::get('/auth/github/callback', function () {
-    $user = Socialite::driver('github')->user();
+    $githubUser = Socialite::driver('github')->user();
+    $user = User::where(['email' => $githubUser->email])->first();
+    if(!$user){
+        $user = User::create([
+            'email' => $githubUser->email,
+            'name' => $githubUser->name,
+            'avatar' => $githubUser->avatar,
+        ]);
+        return [
+            'user' => $user,
+            'token' => $user->createToken($user->name . "'s device")->plainTextToken
+        ];
+    }
+    return [
+        'user' => $user,
+        'token' => $user->createToken($user->name . "'s device")->plainTextToken
+    ];
     return redirect(env('CLIENT_URL') . '?token=blalalaalal');
 });
