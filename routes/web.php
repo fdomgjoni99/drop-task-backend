@@ -23,12 +23,13 @@ Route::get('/auth/github/redirect', function () {
 
 Route::get('/auth/github/callback', function () {
     $githubUser = Socialite::driver('github')->user();
-    $user = User::where(['email' => $githubUser->email])->first();
+    $user = User::where(['email' => $githubUser->email, 'login_provider' => 'github'])->first();
     if(!$user){
         $user = User::create([
             'email' => $githubUser->email,
             'name' => $githubUser->name || $githubUser->nickname,
             'avatar' => $githubUser->avatar,
+            'login_provider' => 'github'
         ]);
         $token = $user->createToken($user->name . "'s device")->plainTextToken;
     }else{
@@ -43,12 +44,13 @@ Route::get('/auth/facebook/redirect', function () {
 
 Route::get('/auth/facebook/callback', function () {
     $facebookUser = Socialite::driver('facebook')->user();
-    $user = User::where(['email' => $facebookUser->email])->first();
+    $user = User::where(['email' => $facebookUser->email, 'login_provider' => 'facebook'])->first();
     if(!$user){
         $user = User::create([
             'email' => $facebookUser->email,
-            'name' => $facebookUser->name || $facebookUser,
+            'name' => $facebookUser->name,
             'avatar' => $facebookUser->avatar,
+            'login_provider' => 'facebook'
         ]);
         $token = $user->createToken($user->name . "'s device")->plainTextToken;
     }else{
