@@ -6,6 +6,7 @@ use App\Http\Resources\BoardResource;
 use App\Models\Board;
 use App\Models\Listing;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BoardController extends Controller
 {
@@ -19,9 +20,11 @@ class BoardController extends Controller
             'title' => 'required|min:5|max:300',
         ]);
         $data = array_merge($data, ['user_id' => auth()->user()->id]);
-        $board = Board::create($data);
-        $listings = Listing::storeListings($board->id);
-        return $board;
+        DB::transaction(function() use($data){
+            $board = Board::create($data);
+            $listings = Listing::storeListings($board->id);
+            return $board;
+        });
     }
 
     public function destroy($id){

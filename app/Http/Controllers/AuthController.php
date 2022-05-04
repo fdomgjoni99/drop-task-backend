@@ -27,6 +27,7 @@ class AuthController extends Controller
     }
 
     public function login(Request $request){
+        $users = User::all();
         $credentials = $request->validate([
             'email' => 'required|string|email',
             'password' => 'required|string|min:5'

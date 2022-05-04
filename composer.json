@@ -11,6 +11,7 @@
         "hashids/hashids": "^4.1",
         "laravel/framework": "^8.65",
         "laravel/sanctum": "^2.12",
+        "laravel/socialite": "^5.5",
         "laravel/tinker": "^2.5",
         "mavinoo/laravel-batch": "^2.3"
     },
