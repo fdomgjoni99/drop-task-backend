@@ -27,12 +27,12 @@ Route::get('/auth/github/callback', function () {
     if(!$user){
         $user = User::create([
             'email' => $githubUser->email,
-            'name' => $githubUser->name,
+            'name' => $githubUser->name || $githubUser->nickname,
             'avatar' => $githubUser->avatar,
         ]);
         $token = $user->createToken($user->name . "'s device")->plainTextToken;
-        return redirect(env('CLIENT_URL') . '/login' . '?token=' . $token);
+    }else{
+        $token = $user->createToken($user->name . "'s device")->plainTextToken;
     }
-    $token = $user->createToken($user->name . "'s device")->plainTextToken;
     return redirect(env('CLIENT_URL') . '/login' . '?token=' . $token);
 });
