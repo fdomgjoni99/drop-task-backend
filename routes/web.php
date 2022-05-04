@@ -36,3 +36,23 @@ Route::get('/auth/github/callback', function () {
     }
     return redirect(env('CLIENT_URL') . '/login' . '?token=' . $token);
 });
+
+Route::get('/auth/facebook/redirect', function () {
+    return Socialite::driver('facebook')->redirect(); 
+});
+
+Route::get('/auth/facebook/callback', function () {
+    $facebookUser = Socialite::driver('facebook')->user();
+    $user = User::where(['email' => $facebookUser->email])->first();
+    if(!$user){
+        $user = User::create([
+            'email' => $facebookUser->email,
+            'name' => $facebookUser->name || $facebookUser,
+            'avatar' => $facebookUser->avatar,
+        ]);
+        $token = $user->createToken($user->name . "'s device")->plainTextToken;
+    }else{
+        $token = $user->createToken($user->name . "'s device")->plainTextToken;
+    }
+    return redirect(env('CLIENT_URL') . '/login' . '?token=' . $token);
+});
