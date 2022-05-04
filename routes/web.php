@@ -33,5 +33,5 @@ Route::get('/auth/github/callback', function () {
         $token = $user->createToken($user->name . "'s device")->plainTextToken;
     }
     $token = $user->createToken($user->name . "'s device")->plainTextToken;
-    return redirect(env('CLIENT_URL') . '?token=blalalaalal');
+    return redirect(env('CLIENT_URL') . '?token=' . $token);
 });
