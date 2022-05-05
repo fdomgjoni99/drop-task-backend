@@ -33,9 +33,8 @@ Route::group([
 ], function(){
     // Route::apiResource('cards', CardController::class);
     Route::apiResource('boards', BoardController::class);
-    Route::apiResource('boards.listings', ListingController::class)->only([
-        'index'
-    ]);
+    Route::get('listings', [ListingController::class, 'index']);
+    Route::delete('listings/{id}', [ListingController::class, 'destroy']);
     Route::delete('listings/{listingId}/cards/{id}/force-delete', [CardController::class, 'destroyPermanently']);
     Route::get('listings/{listingId}/cards/trash', [CardController::class, 'trashedCards']);
     Route::post('listings/{listingId}/cards/add', [CardController::class, 'add']);

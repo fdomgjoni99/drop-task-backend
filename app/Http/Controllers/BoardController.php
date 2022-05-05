@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\BoardResource;
 use App\Models\Board;
 use App\Models\Listing;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -12,7 +13,7 @@ class BoardController extends Controller
 {
     public function index(){
         $boards = Board::select('id','title', 'updated_at')->paginate(20);
-        return BoardResource::collection($boards);
+        return $boards;
     }
 
     public function store(Request $request){
@@ -20,22 +21,28 @@ class BoardController extends Controller
             'title' => 'required|min:5|max:300',
         ]);
         $data = array_merge($data, ['user_id' => auth()->user()->id]);
-        DB::transaction(function() use($data){
-            $board = Board::create($data);
-            $listings = Listing::storeListings($board->id);
-            return $board;
-        });
+        $board = null;
+        try{
+            DB::transaction(function() use($data, &$board){
+                $board = Board::create($data);
+                Listing::storeListings($board->id);
+            });
+            if($board)
+                return $board;
+        }catch(Exception $e){
+            return ['message' => 'error'];
+        }
     }
 
     public function destroy($id){
         $board = Board::findOrFail($id);
-        $deleted = $board->delete();
+        $board->delete();
         return $board;
     }
 
     public function show($id){
         $board = Board::findOrFail($id);
-        return new BoardResource($board);
+        return $board;
     }
 
     public function update(Request $request, $id){
@@ -44,6 +51,6 @@ class BoardController extends Controller
             'title' => 'required|min:5|max:300'
         ]);
         $board->update($data);
-        return new BoardResource($board);
+        return $board;
     }
 }

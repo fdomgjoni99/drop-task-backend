@@ -8,10 +8,20 @@ use Illuminate\Http\Request;
 
 class ListingController extends Controller
 {
-    public function index($boardId){
+    public function index(Request $request){
+        $request->validate([
+            'board_id' => 'required|exists:boards,id'
+        ]);
+        $boardId = $request->query('board_id');
         $listings = Listing::where('board_id', $boardId)
-                    ->limit(3)->with('cards')->get();
+                        ->with('cards')->get();
         return $listings;
+    }
+
+    public function destroy($id){
+        $listing = Listing::findOrFail($id);
+        $listing->delete();
+        return $listing;
     }
 
     public function show($boardId, $id){

@@ -15,8 +15,9 @@ class CreateListingsTable extends Migration
     {
         Schema::create('listings', function (Blueprint $table) {
             $table->id();
-            $table->tinyInteger('type');
-            $table->foreignId('board_id')->constrained('boards')->onDelete('cascade');
+            $table->string('type');
+            $table->tinyInteger('index');
+            $table->foreignId('board_id')->onDelete('cascade');
         });
     }
 

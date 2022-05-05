@@ -10,19 +10,22 @@ class Listing extends Model
 {
     use HasFactory;
 
-    public function board(){
+    public function board()
+    {
         return $this->belongsTo(Board::class);
     }
 
-    public function cards(){
+    public function cards()
+    {
         return $this->hasMany(Card::class);
     }
 
-    public static function storeListings($boardId){
+    public static function storeListings($boardId)
+    {
         Listing::insert([
-            ['type' => ListingType::TODO, 'board_id' => $boardId],
-            ['type' => ListingType::DOING, 'board_id' => $boardId],
-            ['type' => ListingType::DONE, 'board_id' => $boardId],
+            ['type' => 'Todo', 'board_id' => $boardId, 'index' => 0],
+            ['type' => 'Doing', 'board_id' => $boardId, 'index' => 1],
+            ['type' => 'Done', 'board_id' => $boardId, 'index' => 2],
         ]);
     }
 }
