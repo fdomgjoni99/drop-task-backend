@@ -31,19 +31,16 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::group([
     'middleware' => 'auth:sanctum'
 ], function(){
-    // Route::apiResource('cards', CardController::class);
     Route::apiResource('boards', BoardController::class);
-    Route::get('listings', [ListingController::class, 'index']);
-    Route::post('listings', [ListingController::class, 'store']);
-    Route::delete('listings/{id}', [ListingController::class, 'destroy']);
-    Route::put('listings/{id}', [ListingController::class, 'update']);
+    Route::apiResource('listings', ListingController::class);
+    Route::apiResource('cards', CardController::class);
     // Route::post('listings/{listingId}/cards/add', [CardController::class, 'add']);
     // Route::post('listings/{listingId}/cards/remove', [CardController::class, 'remove']);
     // Route::post('listings/{listingId}/cards/move', [CardController::class, 'move']);
-    Route::apiResource('cards', CardController::class)->only([
-        'index', 'store', 'destroy'
-    ]);
     Route::get('/user', function (Request $request) {
         return $request->user();
+    });
+    Route::fallback(function(){
+        return response()->json(['message' => 'Route not found!'], 404);
     });
 });
