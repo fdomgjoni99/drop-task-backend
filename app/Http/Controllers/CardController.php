@@ -14,8 +14,12 @@ class CardController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($listingId)
+    public function index(Request $request)
     {
+        $request->validate([
+            'listing_id' => 'required|exists:listings,id'
+        ]);
+        $listingId = $request->query('listing_id');
         $cards = Card::where('listing_id', $listingId)->get();
         return $cards;
     }
@@ -26,13 +30,14 @@ class CardController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreCardRequest $request, $listingId)
+    public function store(Request $request)
     {
-        $data = $request->validated();
-        $progress = collect($data['checklist'])->countBy('completed');
-        $data['checklist']['progress'] = $progress[1] . '/' . $progress[0];
-        $data['checklist'] = json_encode($data['checklist']);
-        $listing = Listing::findOrFail($listingId);
+        $data = $request->validate([
+            'listing_id' => 'required|exists:listings,id',
+            'title' => 'required|min:10|max:200',
+            'description' => 'max:2000',
+        ]);
+        $listing = Listing::findOrFail($request->listing_id);
         $data['index'] = $listing->cards()->max('index') === null ? 0 : $listing->cards()->max('index') + 1;
         $card = new Card($data);
         $listing->cards()->save($card);
@@ -69,23 +74,10 @@ class CardController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($listingId, $id)
+    public function destroy($id)
     {
         $card = Card::findOrFail($id);
         $card->delete();
-        return $card;
-    }
-
-    public function trashedCards(){
-        $cards = Card::onlyTrashed()->get();
-        return $cards;
-    }
-
-    public function destroyPermanently($listingId, $id){
-        $card = Card::onlyTrashed()->find($id);
-        if(!$card)
-            return response()->json([], 404);
-        $card->forceDelete();
         return $card;
     }
 

@@ -24,6 +24,17 @@ class ListingController extends Controller
         return $listing;
     }
 
+    public function update(Request $request, $id){
+        $data = $request->validate([
+            'type' => 'required',
+            'index' => 'required',
+            'board_id' => 'required|exists:boards,id'
+        ]);
+        $listing = Listing::findOrFail($id);
+        $listing->update($data);
+        return $listing;
+    }
+
     public function show($boardId, $id){
         $listing = Listing::where('board_id', $boardId)
                     ->where('id', $id)

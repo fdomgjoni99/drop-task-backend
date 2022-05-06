@@ -10,6 +10,8 @@ class Listing extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['type', 'index', 'board_id'];
+
     public function board()
     {
         return $this->belongsTo(Board::class);

@@ -20,19 +20,23 @@ class DatabaseSeeder extends Seeder
         $user = \App\Models\User::factory()->create([
             'name' => 'John Doe',
             'email' => 'john@doe.com',
-            'password' => Hash::make('admin')
+            'password' => Hash::make('password')
         ]);
         $boards = Board::insert([
-            [ 'title' => 'Hello World', 'user_id' => $user->id ],
-            [ 'title' => 'Hello World 2', 'user_id' => $user->id ],
+            ['title' => 'Example board', 'user_id' => $user->id],
+            ['title' => 'Example board 2', 'user_id' => $user->id],
+            ['title' => 'Example board 3', 'user_id' => $user->id],
         ]);
         $listings = Listing::insert([
-            ['type' => 0, 'board_id' => 1],
-            ['type' => 1, 'board_id' => 1],
-            ['type' => 2, 'board_id' => 1],
+            ['type' => 'Todo', 'board_id' => 1, 'index' => 0],
+            ['type' => 'Doing', 'board_id' => 1, 'index' => 1],
+            ['type' => 'Done', 'board_id' => 1, 'index' => 2],
         ]);
         $cards = Card::insert([
-            ['title' => 'This is my first card', 'listing_id' => 1, 'index' => 0, 'description' => 'This is an amazing description']
+            ['title' => 'This is my first card', 'listing_id' => 1, 'index' => 0, 'description' => 'This is an amazing description'],
+            ['title' => 'This is my second card', 'listing_id' => 1, 'index' => 1, 'description' => 'This is an amazing description'],
+            ['title' => 'This is another card', 'listing_id' => 2, 'index' => 0, 'description' => 'This is an amazing description'],
+            ['title' => 'This is the latest card', 'listing_id' => 3, 'index' => 0, 'description' => 'This is an amazing description']
         ]);
     }
 }

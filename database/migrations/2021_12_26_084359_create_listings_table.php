@@ -18,6 +18,7 @@ class CreateListingsTable extends Migration
             $table->string('type');
             $table->tinyInteger('index');
             $table->foreignId('board_id')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 

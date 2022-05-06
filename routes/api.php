@@ -35,12 +35,11 @@ Route::group([
     Route::apiResource('boards', BoardController::class);
     Route::get('listings', [ListingController::class, 'index']);
     Route::delete('listings/{id}', [ListingController::class, 'destroy']);
-    Route::delete('listings/{listingId}/cards/{id}/force-delete', [CardController::class, 'destroyPermanently']);
-    Route::get('listings/{listingId}/cards/trash', [CardController::class, 'trashedCards']);
-    Route::post('listings/{listingId}/cards/add', [CardController::class, 'add']);
-    Route::post('listings/{listingId}/cards/remove', [CardController::class, 'remove']);
-    Route::post('listings/{listingId}/cards/move', [CardController::class, 'move']);
-    Route::apiResource('listings.cards', CardController::class)->only([
+    Route::put('listings/{id}', [ListingController::class, 'update']);
+    // Route::post('listings/{listingId}/cards/add', [CardController::class, 'add']);
+    // Route::post('listings/{listingId}/cards/remove', [CardController::class, 'remove']);
+    // Route::post('listings/{listingId}/cards/move', [CardController::class, 'move']);
+    Route::apiResource('cards', CardController::class)->only([
         'index', 'store', 'destroy'
     ]);
     Route::get('/user', function (Request $request) {
