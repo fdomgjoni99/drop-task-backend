@@ -65,7 +65,18 @@ class CardController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = $request->validate([
+            'listing_id' => 'required|exists:listings,id',
+            'title' => 'required|min:10|max:200',
+            'description' => 'max:2000',
+            'previous_index' => 'integer|exists:cards,index',
+            'previous_listing_index' => 'integer|exists:listings,index',
+            'current_index' => 'integer',
+            'current_listing_index' => 'integer',
+        ]);
+        $card = Card::findOrFail($id);
+        $card->update($data);
+        return $card;
     }
 
     /**
