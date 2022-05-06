@@ -34,6 +34,7 @@ Route::group([
     // Route::apiResource('cards', CardController::class);
     Route::apiResource('boards', BoardController::class);
     Route::get('listings', [ListingController::class, 'index']);
+    Route::post('listings', [ListingController::class, 'store']);
     Route::delete('listings/{id}', [ListingController::class, 'destroy']);
     Route::put('listings/{id}', [ListingController::class, 'update']);
     // Route::post('listings/{listingId}/cards/add', [CardController::class, 'add']);

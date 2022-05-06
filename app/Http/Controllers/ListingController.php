@@ -18,6 +18,16 @@ class ListingController extends Controller
         return $listings;
     }
 
+    public function store(Request $request){
+        $data = $request->validate([
+            'type' => 'required',
+            'index' => 'required',
+            'board_id' => 'required|exists:boards,id'
+        ]);
+        $listing = Listing::create($data);
+        return $listing;
+    }
+
     public function destroy($id){
         $listing = Listing::findOrFail($id);
         $listing->delete();
