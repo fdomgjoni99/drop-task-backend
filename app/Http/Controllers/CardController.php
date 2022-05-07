@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCardRequest;
+use App\Http\Services\CardService;
 use App\Models\Card;
 use App\Models\Listing;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CardController extends Controller
 {
@@ -87,9 +90,17 @@ class CardController extends Controller
      */
     public function destroy($id)
     {
-        $card = Card::findOrFail($id);
-        $card->delete();
-        return $card;
+        try{
+            $card = null;
+            DB::transaction(function() use(&$card, $id){
+                $card = Card::findOrFail($id);
+                $card->delete();
+                CardService::resetIndexesAfterDeletion($card->listing_id);
+            });
+            return $card;
+        }catch(Exception $e){
+            return ['message' => 'error'];
+        }
     }
 
     public function add(){
