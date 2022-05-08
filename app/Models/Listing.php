@@ -19,7 +19,7 @@ class Listing extends Model
 
     public function cards()
     {
-        return $this->hasMany(Card::class);
+        return $this->hasMany(Card::class)->orderBy('index');
     }
 
     public static function storeListings($boardId)

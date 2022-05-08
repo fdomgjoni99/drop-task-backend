@@ -34,9 +34,7 @@ Route::group([
     Route::apiResource('boards', BoardController::class);
     Route::apiResource('listings', ListingController::class);
     Route::apiResource('cards', CardController::class);
-    // Route::post('listings/{listingId}/cards/add', [CardController::class, 'add']);
-    // Route::post('listings/{listingId}/cards/remove', [CardController::class, 'remove']);
-    // Route::post('listings/{listingId}/cards/move', [CardController::class, 'move']);
+    Route::post('cards/{id}/move', [CardController::class, 'move']);
     Route::get('/user', function (Request $request) {
         return $request->user();
     });

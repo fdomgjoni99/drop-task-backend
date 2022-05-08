@@ -6,11 +6,11 @@ use App\Models\Listing;
 
 class CardService
 {
-    public static function resetIndexesAfterDeletion($listingId){
-        $cards = Listing::find($listingId)->cards;
-        $i = 0;
+    public static function resetIndexesAfterAction($listingId){
+        $cards = Listing::find($listingId)->cards()->orderBy('index')->orderBy('updated_at', 'desc')->get();
+        $index = 0;
         foreach($cards as $card){
-            $card->index = $i++;
+            $card->index = $index++;
             $card->save();
         }
     }

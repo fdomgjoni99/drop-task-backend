@@ -17,4 +17,8 @@ class Board extends Model
     public function listings(){
         return $this->hasMany(Listing::class);
     }
+
+    public function cards(){
+        return $this->hasManyThrough(Card::class, Listing::class);
+    }
 }

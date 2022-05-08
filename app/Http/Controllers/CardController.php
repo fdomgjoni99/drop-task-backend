@@ -71,15 +71,39 @@ class CardController extends Controller
         $data = $request->validate([
             'listing_id' => 'required|exists:listings,id',
             'title' => 'required|min:10|max:200',
-            'description' => 'max:2000',
-            'previous_index' => 'integer|exists:cards,index',
-            'previous_listing_index' => 'integer|exists:listings,index',
-            'current_index' => 'integer',
-            'current_listing_index' => 'integer',
+            'description' => 'max:2000'
         ]);
         $card = Card::findOrFail($id);
         $card->update($data);
         return $card;
+    }
+
+    public function move(Request $request, $id){
+        $data = $request->validate([
+            // 'previous_index' => 'integer|exists:cards,index',
+            'previous_listing_index' => 'integer|exists:listings,index',
+            'current_index' => 'required|integer',
+            'current_listing_index' => 'required|integer',
+        ]);
+        try{
+            $card = null;
+            DB::transaction(function() use(&$card, $data, $id){
+                $card = Card::findOrFail($id);
+                $boardId = $card->listing->board->id;
+                $previousListingId = isset($data['previous_listing_index']) ? Listing::where([['board_id', $boardId], ['index', $data['previous_listing_index']]])->first()->id : null;
+                $currentListingId = Listing::where([['board_id', $boardId], ['index', $data['current_listing_index']]])->first()->id;
+                $card->update([
+                    'index' => $data['current_index'],
+                    'listing_id' => $currentListingId,
+                ]);
+                if($previousListingId)
+                    CardService::resetIndexesAfterAction($previousListingId);
+                CardService::resetIndexesAfterAction($currentListingId);
+            });
+            return $card;
+        }catch(Exception $e){
+            return ['message' => 'error card could not be moved!'];
+        }
     }
 
     /**
@@ -95,23 +119,11 @@ class CardController extends Controller
             DB::transaction(function() use(&$card, $id){
                 $card = Card::findOrFail($id);
                 $card->delete();
-                CardService::resetIndexesAfterDeletion($card->listing_id);
+                CardService::resetIndexesAfterAction($card->listing_id);
             });
             return $card;
         }catch(Exception $e){
-            return ['message' => 'error'];
+            return ['message' => 'card could not be deleted!'];
         }
-    }
-
-    public function add(){
-        
-    }
-
-    public function remove(){
-        
-    }
-
-    public function move(){
-        
     }
 }
