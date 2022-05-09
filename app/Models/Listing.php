@@ -26,7 +26,7 @@ class Listing extends Model
     {
         Listing::insert([
             ['type' => 'Todo', 'board_id' => $boardId, 'index' => 0],
-            ['type' => 'Doing', 'board_id' => $boardId, 'index' => 1],
+            ['type' => 'In progress', 'board_id' => $boardId, 'index' => 1],
             ['type' => 'Done', 'board_id' => $boardId, 'index' => 2],
         ]);
     }

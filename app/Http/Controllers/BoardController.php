@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\DB;
 
 class BoardController extends Controller
 {
-    public function index(){
-        $boards = Board::select('id','title', 'updated_at')->paginate(20);
+    public function index(Request $request){
+        $boards = Board::where('user_id', auth()->user()->id)->select('id','title', 'created_at', 'updated_at')->paginate(20);
         return $boards;
     }
 
