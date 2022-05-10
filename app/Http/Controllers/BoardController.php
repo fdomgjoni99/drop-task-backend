@@ -23,14 +23,14 @@ class BoardController extends Controller
         $data = array_merge($data, ['user_id' => auth()->user()->id]);
         $board = null;
         try{
-            DB::transaction(function() use($data, &$board){
-                $board = Board::create($data);
-                Listing::storeListings($board->id);
-            });
-            if($board)
-                return $board;
+            DB::beginTransaction();
+            $board = Board::create($data);
+            Listing::storeListings($board->id);
+            DB::commit();
+            return $board;
         }catch(Exception $e){
-            return ['message' => 'error'];
+            DB::rollBack();
+            return ['message' => 'Something went wrong, board could not be stored!'];
         }
     }
 
