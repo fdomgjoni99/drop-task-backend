@@ -3,7 +3,9 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\App;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -37,6 +39,15 @@ class Handler extends ExceptionHandler
     {
         $this->renderable(function (AccessDeniedHttpException $e) {
             return response()->json(['message' => 'Forbidden!'], 403);
+        });
+
+        $this->renderable(function (NotFoundHttpException $e) {
+            $response = [
+                'error' => 'No item was found!'
+            ];
+            if(App::environment(['local', 'development']))
+                $response['message'] = $e->getMessage();
+            return response()->json($response, 404);
         });
     }
 }
