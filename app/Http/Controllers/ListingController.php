@@ -21,9 +21,10 @@ class ListingController extends Controller
     public function store(Request $request){
         $data = $request->validate([
             'type' => 'required',
-            'index' => 'required',
             'board_id' => 'required|exists:boards,id'
         ]);
+        $listingIndex = Listing::where('board_id', $data['board_id'])->max('index') + 1;
+        $data['index'] = $listingIndex;
         $listing = Listing::create($data);
         return $listing;
     }
@@ -50,24 +51,5 @@ class ListingController extends Controller
                     ->where('id', $id)
                     ->first();
         return $listing;
-    }
-
-    public function updateRows(){
-        $data = [
-            [
-                'id' => 1,
-                'row' => 0
-            ],
-            [
-                'id' => 3,
-                'row' => 1
-            ],
-            [
-                'id' => 3,
-                'row' => 5
-            ]
-        ];
-        $index = 'id';
-        Listing::updateBatch();
     }
 }
