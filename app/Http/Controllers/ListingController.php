@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\CardListingResource;
+use App\Models\ChecklistItem;
 use App\Models\Listing;
 use Illuminate\Http\Request;
 
@@ -15,6 +16,12 @@ class ListingController extends Controller
         $boardId = $request->query('board_id');
         $listings = Listing::where('board_id', $boardId)
                         ->with('cards')->get();
+        $listings->each(function($item, $key){
+            $item->cards->map(function($item, $key){
+                $item->progress = ChecklistItem::getProgress($item->id);
+                return $item;
+            });
+        });
         return $listings;
     }
 

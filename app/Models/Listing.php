@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Abstracts\ListingType;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,6 +21,10 @@ class Listing extends Model
     public function cards()
     {
         return $this->hasMany(Card::class)->orderBy('index');
+    }
+
+    public function setTypeAttribute($value){
+        $this->attributes['type'] = ucfirst($value);
     }
 
     public static function storeListings($boardId)

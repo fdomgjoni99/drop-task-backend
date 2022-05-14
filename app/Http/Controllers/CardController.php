@@ -59,7 +59,7 @@ class CardController extends Controller
      */
     public function show($id)
     {
-        $card = Card::findOrFail($id);
+        $card = Card::with('checklistItems')->findOrFail($id);
         $this->authorize('view', [Card::class, $card->listing_id]);
         return $card;
     }

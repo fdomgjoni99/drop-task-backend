@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\CardController;
+use App\Http\Controllers\ChecklistItemController;
 use App\Http\Controllers\ListingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -38,6 +39,7 @@ Route::group([
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
+    Route::resource('checklist-items', ChecklistItemController::class);
     Route::fallback(function(){
         return response()->json(['message' => 'Route not found!'], 404);
     });
