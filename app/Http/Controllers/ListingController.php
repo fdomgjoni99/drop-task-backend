@@ -27,7 +27,7 @@ class ListingController extends Controller
 
     public function store(Request $request){
         $data = $request->validate([
-            'type' => 'required',
+            'type' => 'required|min:3|max:300',
             'board_id' => 'required|exists:boards,id'
         ]);
         $listingIndex = Listing::where('board_id', $data['board_id'])->max('index') + 1;

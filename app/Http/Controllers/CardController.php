@@ -40,7 +40,7 @@ class CardController extends Controller
     {
         $data = $request->validate([
             'listing_id' => 'required|exists:listings,id',
-            'title' => 'required|min:10|max:200',
+            'title' => 'required|min:3|max:200',
             'description' => 'max:2000',
         ]);
         $this->authorize('create', [Card::class, $data['listing_id']]);

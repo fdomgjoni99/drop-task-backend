@@ -18,7 +18,7 @@ class BoardController extends Controller
 
     public function store(Request $request){
         $data = $request->validate([
-            'title' => 'required|min:5|max:300',
+            'title' => 'required|min:3|max:300',
         ]);
         $data = array_merge($data, ['user_id' => auth()->user()->id]);
         $board = null;
