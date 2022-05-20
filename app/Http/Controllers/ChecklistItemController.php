@@ -74,9 +74,12 @@ class ChecklistItemController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function toggleCompleted(Request $request, $id)
     {
-        //
+        $checklistItem = ChecklistItem::findOrFail($id);
+        $checklistItem->completed = $checklistItem;
+        $checklistItem->save();
+        return $checklistItem;
     }
 
     /**

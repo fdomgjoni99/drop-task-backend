@@ -39,6 +39,7 @@ Route::group([
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
+    Route::put('checklist-items/{id}/toggle-completed', [ChecklistItemController::class, 'toggleCompleted']);
     Route::resource('checklist-items', ChecklistItemController::class);
     Route::fallback(function(){
         return response()->json(['message' => 'Route not found!'], 404);
