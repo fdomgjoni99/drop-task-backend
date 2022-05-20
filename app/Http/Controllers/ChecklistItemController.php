@@ -77,7 +77,7 @@ class ChecklistItemController extends Controller
     public function toggleCompleted(Request $request, $id)
     {
         $checklistItem = ChecklistItem::findOrFail($id);
-        $checklistItem->completed = $checklistItem;
+        $checklistItem->completed = $request->completed ? 1 : 0;
         $checklistItem->save();
         return $checklistItem;
     }
