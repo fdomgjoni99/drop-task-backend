@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCardRequest;
 use App\Http\Services\CardService;
 use App\Models\Card;
+use App\Models\ChecklistItem;
 use App\Models\Listing;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -60,6 +61,7 @@ class CardController extends Controller
     public function show($id)
     {
         $card = Card::with('checklistItems')->findOrFail($id);
+        $card->progress = ChecklistItem::getProgress($card->id);
         $this->authorize('view', [Card::class, $card->listing_id]);
         return $card;
     }
