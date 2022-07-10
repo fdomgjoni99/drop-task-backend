@@ -25,8 +25,6 @@ List of technologies and libraries used.
 
 * [Laravel](https://laravel.com/)
 * [Laravel Socialite](https://laravel.com/docs/9.x/socialite)
-* [Angular](https://angular.io/)
-* [Angular Material](https://material.angular.io/)
 
 ## Features
 
