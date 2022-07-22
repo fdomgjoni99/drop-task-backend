@@ -34,3 +34,5 @@ List of technologies and libraries used.
 - [x] Social login with Facebook, Google and Github
 - [ ] Receive notifications when the user sets a due date for a card
 - [ ] Board personalization and settings to change background etc.
+
+The frontend was built a friend of mine with Angular, it can be found in the following [repository](https://github.com/gentbrika/Drop-Task-Frontend).
